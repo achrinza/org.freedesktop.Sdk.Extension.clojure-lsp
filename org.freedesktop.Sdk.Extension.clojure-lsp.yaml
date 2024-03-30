@@ -1,0 +1,30 @@
+id: org.freedesktop.Sdk.Extension.clojure-lsp
+branch: '23.08'
+runtime: org.freedesktop.Sdk
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+build-extension: true
+separate-locales: false
+appstream-compose: false
+modules:
+  - name: clojure-lsp
+    buildsystem: simple
+    #    cleanup:
+    #      - '*'
+    sources:
+      - type: archive
+        url: https://github.com/clojure-lsp/clojure-lsp/releases/download/2024.03.13-13.11.00/clojure-lsp-native-linux-amd64.zip
+        sha256: e18c06fa7bf6e730f572542dd4c5800a4de43579ce3f6e1cc24f432e6a801fce
+    build-commands:
+      - chmod 755 clojure-lsp
+      - mkdir /usr/lib/sdk/clojure-lsp/bin
+      - cp clojure-lsp /usr/lib/sdk/clojure-lsp/bin
+  - name: scripts
+    buildsystem: simple
+    sources:
+      - type: script
+        commands:
+          - export PATH=$PATH:/usr/lib/sdk/clojure-lsp/bin
+        dest-filename: enable.sh
+    build-commands:
+      - cp enable.sh /usr/lib/sdk/clojure-lsp
