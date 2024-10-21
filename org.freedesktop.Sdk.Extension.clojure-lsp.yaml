@@ -9,22 +9,19 @@ appstream-compose: false
 modules:
   - name: clojure-lsp
     buildsystem: simple
-    #    cleanup:
-    #      - '*'
     sources:
       - type: archive
-        url: https://github.com/clojure-lsp/clojure-lsp/releases/download/2024.03.13-13.11.00/clojure-lsp-native-linux-amd64.zip
-        sha256: e18c06fa7bf6e730f572542dd4c5800a4de43579ce3f6e1cc24f432e6a801fce
+        url: https://github.com/clojure-lsp/clojure-lsp/releases/download/2024.08.05-18.16.00/clojure-lsp-native-static-linux-amd64.zip
+        sha256: 0deaec7beb06a9e3f05babd6256ba856aef8016946a623ece2bef251127bf19a
     build-commands:
-      - chmod 755 clojure-lsp
-      - mkdir /usr/lib/sdk/clojure-lsp/bin
-      - cp clojure-lsp /usr/lib/sdk/clojure-lsp/bin
+      - install -Dm755 clojure-lsp /usr/lib/sdk/clojure-lsp/bin/clojure-lsp
   - name: scripts
     buildsystem: simple
     sources:
       - type: script
         commands:
-          - export PATH=$PATH:/usr/lib/sdk/clojure-lsp/bin
+          - export PATH=$PATH:FLATPAK_DEST/bin
         dest-filename: enable.sh
     build-commands:
-      - cp enable.sh /usr/lib/sdk/clojure-lsp
+      - sed -i -e 's@FLATPAK_DEST@'"$FLATPAK_DEST"'@g' enable.sh
+      - install -Dm 755 enable.sh /usr/lib/sdk/clojure-lsp
